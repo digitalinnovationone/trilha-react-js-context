@@ -12,6 +12,7 @@ import {
   Title,
 } from "./styles";
 import { Game } from "../../types/interfaces/game";
+import useCart from "../../hooks/useCart";
 
 const games: Game[] = [
   {
@@ -51,12 +52,23 @@ const games: Game[] = [
 
 const DiscountHighlights = () => {
   const theme = useTheme();
+  const cart = useCart();
 
-  const itemExistsInCard = (id: number) => {
-    return false;
+  const itemExistsInCart = (id: number) => {
+    return cart?.items.find((game) => game.id === id);
   };
 
-  const toggleCart = (game: Game) => {};
+  const toggleCart = (game: Game) => {
+    if (itemExistsInCart(game.id)) {
+      cart?.removeFromCart(game.id);
+      alert(`${game.name} removed from cart successfully!`);
+
+      return;
+    }
+
+    cart?.addToCart(game);
+    alert(`${game.name} added to cart successfully!`);
+  };
 
   return (
     <>
@@ -76,7 +88,7 @@ const DiscountHighlights = () => {
               icon={<BagIcon fill={theme.colors.primary.dark} />}
               onClick={() => toggleCart(game)}
             >
-              {!itemExistsInCard(game.id) ? "Add to cart" : "Remove from cart"}
+              {!itemExistsInCart(game.id) ? "Add to cart" : "Remove from cart"}
             </CartButton>
           </Card>
         ))}

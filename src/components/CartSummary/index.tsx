@@ -8,16 +8,33 @@ import {
   Value,
   CheckoutButton,
 } from "./styles";
+import useCart from "../../hooks/useCart";
 
 const CartSummary = () => {
   const theme = useTheme();
+  const cart = useCart();
 
-  const calcTotalCartValue = () => {
-    return 0;
+  if (!cart?.items.length) {
+    return null;
+  }
+
+  const calcTotalValueWithoutDiscount = () => {
+    return cart.items.reduce((total, item) => total + item.prices.value, 0);
   };
 
   const calcTotalDiscount = () => {
-    return 0;
+    return cart.items.reduce(
+      (total, item) =>
+        total + (item.prices.value - item.prices.valueWithDiscount),
+      0
+    );
+  };
+
+  const calcTotalCartValue = () => {
+    return cart.items.reduce(
+      (total, item) => total + item.prices.valueWithDiscount,
+      0
+    );
   };
 
   return (
@@ -26,7 +43,7 @@ const CartSummary = () => {
       <Text>Check your cart summary and complete your purchase.</Text>
       <Summary>
         <Label>
-          Price: <Value>$ {calcTotalCartValue().toFixed(2)}</Value>
+          Price: <Value>$ {calcTotalValueWithoutDiscount().toFixed(2)}</Value>
         </Label>
         <Label>
           Discount: <Value>- $ {calcTotalDiscount().toFixed(2)}</Value>

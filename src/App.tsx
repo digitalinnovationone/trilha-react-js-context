@@ -6,6 +6,7 @@ import { Layout, PageContent } from "./AppStyles";
 import { redTheme } from "./themes/red";
 import { purpleTheme } from "./themes/purple";
 import { whiteTheme } from "./themes/white";
+import { CartProvider } from "./contexts/Cart/Provider";
 
 function App() {
   const [searchParams] = useSearchParams();
@@ -30,7 +31,9 @@ function App() {
       <Layout>
         <Navbar />
         <PageContent>
-          <Outlet />
+          <CartProvider>
+            <Outlet />
+          </CartProvider>
         </PageContent>
       </Layout>
     </ThemeProvider>
